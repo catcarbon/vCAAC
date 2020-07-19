@@ -35,8 +35,6 @@
     <None Include="res\vCAAC.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="EuroScopePlugInDll.dll" />
-    <None Include="EuroScopePlugInDll.pdb" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,9 +52,6 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EuroScopePlugIn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VirtualCAACPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,8 +66,5 @@
     <ResourceCompile Include="vCAAC.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="EuroScopePlugInDll.lib" />
   </ItemGroup>
 </Project>
