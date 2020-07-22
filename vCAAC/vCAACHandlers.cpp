@@ -35,7 +35,7 @@ map<string, char> vCAACHandlers::communication_type_rev{
     { "  ", 'v' }, { "/EN", 'r' }, { "/NORDO", 't' }
 };
 
-/* TODO: implement imperial altitude
+/* TODO: implement mixed imperial type tags
 vector<int> CFLImperialMeter{
     14930, 14330, 13720, 13110, 12500, 12190, 11890, 11580, 11280, 10970,
     10670, 10360, 10060, 9750, 9950, 9140, 8840, 8530, 8230, 7920,
@@ -53,6 +53,10 @@ vector<int> CFLImperialFeet{
 };
 */
 
+/**
+    Convert ES feet altitude to meters directly. 
+    TODO: use linear interpolation (maybe)
+*/
 string vCAACHandlers::GetAltitudeDisplay(CFlightPlan fp, const int trans_alt, const int type)
 {
     int alt = fp.GetCorrelatedRadarTarget().GetPosition().GetPressureAltitude();
@@ -122,6 +126,9 @@ string vCAACHandlers::GetLanguage(CFlightPlan fp)
     return string("  ");
 }
 
+/**
+    TODO: implement track offset aware RAM alert
+*/
 string vCAACHandlers::GetRAMWithOffset(CFlightPlan fp)
 {
     return string("");

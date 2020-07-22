@@ -11,59 +11,44 @@ using namespace EuroScopePlugIn;
 
 CVirtualCAACPlugin::CVirtualCAACPlugin()
     : EuroScopePlugIn::CPlugIn(EuroScopePlugIn::COMPATIBILITY_CODE,
-          MY_PLUGIN_NAME, MY_PLUGIN_VERSION, MY_PLUGIN_DEVELOPER, MY_PLUGIN_COPYRIGHT)
+        MY_PLUGIN_NAME, MY_PLUGIN_VERSION, MY_PLUGIN_DEVELOPER, MY_PLUGIN_COPYRIGHT)
 {
-    RegisterTagItemType("ALT Mixed Metric", TAG_ITEM_ALT_MM);
-    // RegisterTagItemType("ALT Mixed Imperial", TAG_ITEM_ALT_MI);
-    RegisterTagItemType("ALT Metric Only", TAG_ITEM_ALT_MO);
+    /**
+        Current altitude display.
+    */
+    RegisterTagItemType("Current Altitude Mixed Metric", TAG_ITEM_ALT_MM);
+    RegisterTagItemType("Current Altitude Metric Only", TAG_ITEM_ALT_MO);
 
-    RegisterTagItemType("CFL Mixed Metric", TAG_ITEM_CFL_MM);
-    // RegisterTagItemType("CFL Mixed Imperial", TAG_ITEM_CFL_MI);
-    RegisterTagItemType("CFL Metric Only", TAG_ITEM_CFL_MO);
+    /**
+        Controller assigned temporary altitude display in multiple formats.
+    */
+    RegisterTagItemType("Temp Altitude Mixed Metric", TAG_ITEM_CFL_MM);
+    RegisterTagItemType("Temp Altitude Metric Only", TAG_ITEM_CFL_MO);
+    RegisterTagItemFunction("List Temp Altitudes Mixed Metric", TAG_FUNC_CFL_MM);
+    RegisterTagItemFunction("List Temp Altitudes Metric Only", TAG_FUNC_CFL_MO);
 
-    RegisterTagItemType("RFL Mixed Metric", TAG_ITEM_RFL_MM);
-    // RegisterTagItemType("RFL Mixed Imperial", TAG_ITEM_RFL_MI);
-    RegisterTagItemType("RFL Metric Only", TAG_ITEM_RFL_MO);
+    /**
+        Cruising altitude entered in flight plan. 
+    */
+    RegisterTagItemType("FP Cruise Mixed Metric", FPL_DATA_FINAL_MM);
+    RegisterTagItemType("FP Cruise Metric Only", FPL_DATA_FINAL_MO);
 
-    RegisterTagItemFunction("Modify CFL Mixed Metric", TAG_FUNC_CFL_MM);
-    //  RegisterTagItemFunction("Modify CFL Mixed Imperial", TAG_FUNC_CFL_MI);
-    RegisterTagItemFunction("Modify CFL Metric Only", TAG_FUNC_CFL_MO);
+    /**
+        Communication type assigned by controllers. 
+        /v/ -> voice using Chinese
+        /r/ -> voice using English
+        /t/ -> No Radio (NORDO)
+    */
+    RegisterTagItemType("Communication Type", TAG_ITEM_LANGUAGE);
+    RegisterTagItemFunction("List Communication Types", TAG_FUNC_LANGUAGE);
 
-    //RegisterTagItemFunction("RFL edit", TAG_FUNC_VCAAC_RFL);
-
-    RegisterTagItemType("FP Final Altitude Mixed Metric", FPL_DATA_FINAL_MM);
-    //RegisterTagItemType("FP Final Altitude Mixed Imperial", FPL_DATA_FINAL_MM);
-    RegisterTagItemType("FP Final Altitude Metric Only", FPL_DATA_FINAL_MO);
-
-	RegisterTagItemType("Communication Type", TAG_ITEM_LANGUAGE);
-    RegisterTagItemFunction("Modify Communication Type", TAG_FUNC_LANGUAGE);
-
-    RegisterTagItemType("Assigned Speed (if set)", TAG_ITEM_SPEED_RESTRICTION);
-
-    /*
-    m_GroundList = RegisterFpList("Ground List");
-
-    if (m_GroundList.GetColumnNumber() == 0) {
-        m_GroundList.AddColumnDefinition("C/S", 6, false,
-            NULL, EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
-            NULL, EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
-            NULL, EuroScopePlugIn::TAG_ITEM_FUNCTION_NO);
-        m_GroundList.AddColumnDefinition("STS", 6, false,
-            NULL, TAG_ITEM_GND_STS,
-            NULL, TAG_FUNC_GND_STS,
-            NULL, EuroScopePlugIn::TAG_ITEM_FUNCTION_NO);
-    }
-	*/
+    /**
+        Assigned speed or mach. Speed is always in knots regardless of ES config.   
+    */
+    RegisterTagItemType("Assigned Speed/Mach (if set)", TAG_ITEM_SPEED_RESTRICTION);
 }
 
-CVirtualCAACPlugin::~CVirtualCAACPlugin() {}
-
-/*
-void CVirtualCAACPlugin::OnAirportRunwayActivityChanged(void)
-{
-    DisplayUserMessage(MY_PLUGIN_NAME, "Info", "Runway changed", true, true, false, false, false);
-}
-*/
+CVirtualCAACPlugin::~CVirtualCAACPlugin() { }
 
 bool CVirtualCAACPlugin::OnCompileCommand(const char* sCommandLine)
 {
@@ -90,41 +75,30 @@ void CVirtualCAACPlugin::OnGetTagItem(EuroScopePlugIn::CFlightPlan FlightPlan,
     if (!FlightPlan.IsValid())
         return;
 
-	char buf[100];
     string str;
 
     switch (ItemCode) {
     case TAG_ITEM_ALT_MM:
-    //case TAG_ITEM_ALT_MI:
     case TAG_ITEM_ALT_MO:
         str = vCAACHandlers::GetAltitudeDisplay(FlightPlan, GetTransitionAltitude(), ItemCode);
-        //sprintf_s(sItemString, 16, "%s", str.c_str());
         break;
     case TAG_ITEM_CFL_MM:
-    //case TAG_ITEM_CFL_MI:
     case TAG_ITEM_CFL_MO:
         str = vCAACHandlers::GetCFLDisplay(FlightPlan, GetTransitionAltitude(), ItemCode);
-        //sprintf_s(sItemString, 16, "%s", str.c_str());
         break;
     case FPL_DATA_FINAL_MM:
-        //case FPL_DATA_FINAL_MI:
     case FPL_DATA_FINAL_MO:
         str = vCAACHandlers::GetFlightPlanAltitudeDisplay(FlightPlan, ItemCode);
-        //sprintf_s(sItemString, 16, "%s", str.c_str());
         break;
     case TAG_ITEM_LANGUAGE:
         str = vCAACHandlers::GetLanguage(FlightPlan);
-        //sprintf_s(buf, 100, "Comm type: %c", FlightPlan.GetControllerAssignedData().GetCommunicationType());
-        //DisplayUserMessage(MY_PLUGIN_NAME, "Info", buf, true, true, false, false, false);
-        //sprintf_s(sItemString, 16, "%s", str.c_str());
         break;
     case TAG_ITEM_SPEED_RESTRICTION:
         str = vCAACHandlers::GetSpeedRestriction(FlightPlan);
-        //sprintf_s(sItemString, 16, "%s", str.c_str());
         break;
     }
 
-	sprintf_s(sItemString, 16, "%s", str.c_str());
+    sprintf_s(sItemString, 16, "%s", str.c_str());
 }
 
 void CVirtualCAACPlugin::OnFunctionCall(int FunctionId, const char* sItemString,
@@ -132,14 +106,13 @@ void CVirtualCAACPlugin::OnFunctionCall(int FunctionId, const char* sItemString,
 {
     EuroScopePlugIn::CFlightPlan fp;
 
-    // flight plan must be valid
+    // flight plan must be valid for selected aircraft
     fp = FlightPlanSelectASEL();
     if (!fp.IsValid())
         return;
 
     switch (FunctionId) {
     case TAG_FUNC_CFL_MM:
-        //case TAG_FUNC_CFL_MI:
         CPlugIn::OpenPopupList(Area, "Cleared Altitude", 2);
         for (const auto& tup : vCAACHandlers::GetCFLList(fp)) {
             AddPopupListElement(get<0>(tup).c_str(), get<1>(tup).c_str(), TAG_FUNC_CFL_SET, get<2>(tup));
@@ -161,7 +134,7 @@ void CVirtualCAACPlugin::OnFunctionCall(int FunctionId, const char* sItemString,
         CPlugIn::OpenPopupList(Area, "Communication", 2);
         for (const auto& tup : vCAACHandlers::GetLanguageList(fp)) {
             AddPopupListElement(get<0>(tup).c_str(), get<1>(tup).c_str(), TAG_FUNC_SET_LANGUAGE);
-		}
+        }
         break;
     case TAG_FUNC_CFL_SET:
     case TAG_FUNC_RFL_SET:
@@ -175,4 +148,4 @@ void CVirtualCAACPlugin::OnFunctionCall(int FunctionId, const char* sItemString,
     }
 }
 
-void CVirtualCAACPlugin::VersionCheck(void) {}
+void CVirtualCAACPlugin::VersionCheck(void) { }
