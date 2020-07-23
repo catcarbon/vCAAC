@@ -20,7 +20,7 @@ CVirtualCAACPlugin::CVirtualCAACPlugin()
     RegisterTagItemType("Current Altitude Metric Only", TAG_ITEM_ALT_MO);
 
     /**
-        Controller assigned temporary altitude display in multiple formats.
+        Controller assigned temporary altitude display.
     */
     RegisterTagItemType("Temp Altitude Mixed Metric", TAG_ITEM_CFL_MM);
     RegisterTagItemType("Temp Altitude Metric Only", TAG_ITEM_CFL_MO);
@@ -30,8 +30,8 @@ CVirtualCAACPlugin::CVirtualCAACPlugin()
     /**
         Cruising altitude entered in flight plan. 
     */
-    RegisterTagItemType("FP Cruise Mixed Metric", FPL_DATA_FINAL_MM);
-    RegisterTagItemType("FP Cruise Metric Only", FPL_DATA_FINAL_MO);
+    RegisterTagItemType("FP Cruise Mixed Metric", TAG_ITEM_FP_CRUISE_MM);
+    RegisterTagItemType("FP Cruise Metric Only", TAG_ITEM_FP_CRUISE_MO);
 
     /**
         Communication type assigned by controllers. 
@@ -86,8 +86,8 @@ void CVirtualCAACPlugin::OnGetTagItem(EuroScopePlugIn::CFlightPlan FlightPlan,
     case TAG_ITEM_CFL_MO:
         str = vCAACHandlers::GetCFLDisplay(FlightPlan, GetTransitionAltitude(), ItemCode);
         break;
-    case FPL_DATA_FINAL_MM:
-    case FPL_DATA_FINAL_MO:
+    case TAG_ITEM_FP_CRUISE_MM:
+    case TAG_ITEM_FP_CRUISE_MO:
         str = vCAACHandlers::GetFlightPlanAltitudeDisplay(FlightPlan, ItemCode);
         break;
     case TAG_ITEM_LANGUAGE:
