@@ -1,4 +1,6 @@
 # vCAAC Plugin
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcatcarbon%2FvCAAC.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcatcarbon%2FvCAAC?ref=badge_shield)
+
 vCAAC is a plugin for EuroScope that provides functions relevant to air traffic operations in China.
 
 ## Release
@@ -21,3 +23,6 @@ Those files are located under [suggested_config](suggested_config/README.md) fol
 * Track offset-aware Route Adherence Monitoring (RAM)
 * No-transgression Zone (NTZ) monitoring
 * CPDLC clearance system integration
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcatcarbon%2FvCAAC.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcatcarbon%2FvCAAC?ref=badge_large)
